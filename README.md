@@ -2,6 +2,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-1.27.0-green.svg)](https://modelcontextprotocol.io/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 A powerful **Model Context Protocol (MCP) server** that generates REST API boilerplate code for 6 major frameworks and automatically syncs with Postman Collections. Built with **SOLID principles**, **design patterns**, and **enterprise-grade architecture**.
 
@@ -30,12 +31,38 @@ A powerful **Model Context Protocol (MCP) server** that generates REST API boile
 
 ### 1. Clone & Setup
 
+#### Using uv (Recommended)
+
+[uv](https://docs.astral.sh/uv/) is an extremely fast Python package installer and resolver by Astral (makers of Ruff).
+
+**Why uv?**
+- ⚡ **10-100x faster** than pip
+- 🔒 **Automatic lock files** for reproducible installs
+- 🎯 **Built-in virtual environment** management
+- 🚀 **Single binary** - no Python required to install
+- 🔄 **Drop-in replacement** for pip, pip-tools, and virtualenv
+
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Or: brew install uv (macOS), pip install uv, or see docs for other methods
+
+# Clone and setup
+git clone <your-repo-url>
+cd mcp-api-postman
+
+# Install dependencies (uv creates .venv automatically)
+uv sync
+```
+
+#### Traditional Method (pip)
+
 ```bash
 git clone <your-repo-url>
 cd mcp-api-postman
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ### 2. Configure for Your IDE
@@ -52,13 +79,30 @@ This MCP server works with **any MCP-compatible IDE**. Choose your IDE below:
   "mcp.servers": {
     "api-generator": {
       "type": "stdio",
-      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
+      "command": "uv",
+      "args": ["run", "--directory", "/full/path/to/mcp-api-postman", "python", "-m", "server"],
+      "cwd": "/full/path/to/mcp-api-postman"
+    }
+  }
+}
+```
+
+<details>
+<summary>Alternative: Using venv path directly</summary>
+
+```json
+{
+  "mcp.servers": {
+    "api-generator": {
+      "type": "stdio",
+      "command": "/full/path/to/mcp-api-postman/.venv/bin/python",
       "args": ["-m", "server"],
       "cwd": "/full/path/to/mcp-api-postman"
     }
   }
 }
 ```
+</details>
 
 #### Cursor
 
@@ -69,13 +113,29 @@ This MCP server works with **any MCP-compatible IDE**. Choose your IDE below:
 {
   "mcpServers": {
     "api-generator": {
-      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
+      "command": "uv",
+      "args": ["run", "--directory", "/full/path/to/mcp-api-postman", "python", "-m", "server"],
+      "cwd": "/full/path/to/mcp-api-postman"
+    }
+  }
+}
+```
+
+<details>
+<summary>Alternative: Using venv path directly</summary>
+
+```json
+{
+  "mcpServers": {
+    "api-generator": {
+      "command": "/full/path/to/mcp-api-postman/.venv/bin/python",
       "args": ["-m", "server"],
       "cwd": "/full/path/to/mcp-api-postman"
     }
   }
 }
 ```
+</details>
 
 #### Windsurf
 
@@ -86,13 +146,29 @@ This MCP server works with **any MCP-compatible IDE**. Choose your IDE below:
 {
   "mcpServers": {
     "api-generator": {
-      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
+      "command": "uv",
+      "args": ["run", "--directory", "/full/path/to/mcp-api-postman", "python", "-m", "server"],
+      "cwd": "/full/path/to/mcp-api-postman"
+    }
+  }
+}
+```
+
+<details>
+<summary>Alternative: Using venv path directly</summary>
+
+```json
+{
+  "mcpServers": {
+    "api-generator": {
+      "command": "/full/path/to/mcp-api-postman/.venv/bin/python",
       "args": ["-m", "server"],
       "cwd": "/full/path/to/mcp-api-postman"
     }
   }
 }
 ```
+</details>
 
 #### Zed
 
@@ -102,34 +178,49 @@ Edit your Zed settings (Cmd/Ctrl+,):
 {
   "context_servers": {
     "api-generator": {
-      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
-      "args": ["-m", "server"]
+      "command": "uv",
+      "args": ["run", "--directory", "/full/path/to/mcp-api-postman", "python", "-m", "server"]
     }
   }
 }
 ```
 
+<details>
+<summary>Alternative: Using venv path directly</summary>
+
+```json
+{
+  "context_servers": {
+    "api-generator": {
+      "command": "/full/path/to/mcp-api-postman/.venv/bin/python",
+      "args": ["-m", "server"]
+    }
+  }
+}
+```
+</details>
+
 #### IntelliJ IDEA (Recommended for Spring Boot!)
 
 IntelliJ IDEA supports MCP through plugins. Two options:
 
-**Option 1: AI Assistant Plugin**
+**Option 1: AI Assistant Plugin (with uv)**
 
 1. Install **AI Assistant** plugin (if not already installed)
 2. Go to **Settings → Tools → AI Assistant → Model Context Protocol**
 3. Add new MCP server:
    - **Name:** API Generator
-   - **Command:** `/full/path/to/mcp-api-postman/venv/bin/python`
-   - **Arguments:** `-m server`
+   - **Command:** `uv`
+   - **Arguments:** `run --directory /full/path/to/mcp-api-postman python -m server`
    - **Working Directory:** `/full/path/to/mcp-api-postman`
 
-**Option 2: External Tool Integration**
+**Option 2: External Tool Integration (with uv)**
 
 1. Go to **Settings → Tools → External Tools**
 2. Add new tool:
    - **Name:** Generate API
-   - **Program:** `/full/path/to/mcp-api-postman/venv/bin/python`
-   - **Arguments:** `-m server`
+   - **Program:** `uv`
+   - **Arguments:** `run --directory $ProjectFileDir$ python -m server`
    - **Working Directory:** `$ProjectFileDir$`
 
 **Note:** IntelliJ MCP support may vary by version. Check JetBrains documentation for the latest MCP integration options.
@@ -137,7 +228,14 @@ IntelliJ IDEA supports MCP through plugins. Two options:
 #### Other MCP-Compatible IDEs
 
 If your IDE supports MCP servers, use:
-- **Command:** `/full/path/to/venv/bin/python` (or `venv\Scripts\python.exe` on Windows)
+
+**With uv (Recommended):**
+- **Command:** `uv`
+- **Args:** `["run", "--directory", "/full/path/to/mcp-api-postman", "python", "-m", "server"]`
+- **CWD:** `/full/path/to/mcp-api-postman`
+
+**Traditional method:**
+- **Command:** `/full/path/to/.venv/bin/python` (or `.venv\Scripts\python.exe` on Windows)
 - **Args:** `["-m", "server"]`
 - **CWD:** `/full/path/to/mcp-api-postman`
 
@@ -407,7 +505,12 @@ Each generator provides framework-specific endpoints:
 
 ```bash
 cd /path/to/mcp-api-postman
-source venv/bin/activate
+
+# With uv
+uv run python -c "from src.factory import GeneratorFactory"
+
+# Traditional method
+source .venv/bin/activate
 python -c "from src.factory import GeneratorFactory"
 ```
 
