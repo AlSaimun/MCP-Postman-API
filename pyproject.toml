@@ -1,0 +1,19 @@
+[project]
+name = "django-api-postman-mcp"
+version = "0.1.0"
+description = "MCP server that scaffolds Django APIs and updates Postman collections"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "mcp>=1.9.0"
+]
+
+[project.scripts]
+django-api-postman-mcp = "server:main"
+
+[tool.setuptools]
+py-modules = ["server"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"

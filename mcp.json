@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "django-api-postman": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/venv/bin/python",
+      "args": ["-m", "server"],
+      "cwd": "${workspaceFolder}/postman_mcp"
+    }
+  }
+}
