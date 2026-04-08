@@ -5,6 +5,8 @@
 
 A powerful **Model Context Protocol (MCP) server** that generates REST API boilerplate code for 6 major frameworks and automatically syncs with Postman Collections. Built with **SOLID principles**, **design patterns**, and **enterprise-grade architecture**.
 
+**Works with any MCP-compatible IDE:** VS Code, Cursor, Windsurf, Zed, IntelliJ IDEA, and more!
+
 ## 🚀 Supported Frameworks
 
 - **Django** (Python + Django REST Framework)
@@ -20,7 +22,7 @@ A powerful **Model Context Protocol (MCP) server** that generates REST API boile
 - 📝 Generates **models, controllers, routes, and tests**
 - 🔄 Creates and **syncs Postman collections** automatically
 - 🏗️ Follows **framework-specific best practices**
-- 🔌 Works seamlessly with **GitHub Copilot Chat**
+- 🔌 **Works with any MCP-compatible IDE** (VS Code, Cursor, Windsurf, Zed, etc.)
 - 🎨 **Production-ready** code with proper error handling
 - 📦 **Type-safe** code generation with full type hints
 
@@ -36,10 +38,14 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure for GitHub Copilot
+### 2. Configure for Your IDE
 
-**macOS/Linux:**
-Edit `~/.config/Code/User/settings.json`:
+This MCP server works with **any MCP-compatible IDE**. Choose your IDE below:
+
+#### VS Code (GitHub Copilot / Claude)
+
+**macOS/Linux:** Edit `~/.config/Code/User/settings.json`  
+**Windows:** Edit `%APPDATA%\Code\User\settings.json`
 
 ```json
 {
@@ -54,33 +60,101 @@ Edit `~/.config/Code/User/settings.json`:
 }
 ```
 
-**Windows:**
-Edit `%APPDATA%\Code\User\settings.json`:
+#### Cursor
+
+**macOS/Linux:** Edit `~/.cursor/config.json` or Settings → MCP Servers  
+**Windows:** Edit `%APPDATA%\Cursor\config.json`
 
 ```json
 {
-  "mcp.servers": {
+  "mcpServers": {
     "api-generator": {
-      "type": "stdio",
-      "command": "C:\\full\\path\\to\\mcp-api-postman\\venv\\Scripts\\python.exe",
+      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
       "args": ["-m", "server"],
-      "cwd": "C:\\full\\path\\to\\mcp-api-postman"
+      "cwd": "/full/path/to/mcp-api-postman"
     }
   }
 }
 ```
 
-### 3. Restart VS Code
+#### Windsurf
 
-Fully quit and restart VS Code for the MCP server to load.
+**macOS/Linux:** Edit `~/.windsurf/mcp_config.json`  
+**Windows:** Edit `%APPDATA%\Windsurf\mcp_config.json`
 
-## 💬 Usage with GitHub Copilot Chat
+```json
+{
+  "mcpServers": {
+    "api-generator": {
+      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
+      "args": ["-m", "server"],
+      "cwd": "/full/path/to/mcp-api-postman"
+    }
+  }
+}
+```
+
+#### Zed
+
+Edit your Zed settings (Cmd/Ctrl+,):
+
+```json
+{
+  "context_servers": {
+    "api-generator": {
+      "command": "/full/path/to/mcp-api-postman/venv/bin/python",
+      "args": ["-m", "server"]
+    }
+  }
+}
+```
+
+#### IntelliJ IDEA (Recommended for Spring Boot!)
+
+IntelliJ IDEA supports MCP through plugins. Two options:
+
+**Option 1: AI Assistant Plugin**
+
+1. Install **AI Assistant** plugin (if not already installed)
+2. Go to **Settings → Tools → AI Assistant → Model Context Protocol**
+3. Add new MCP server:
+   - **Name:** API Generator
+   - **Command:** `/full/path/to/mcp-api-postman/venv/bin/python`
+   - **Arguments:** `-m server`
+   - **Working Directory:** `/full/path/to/mcp-api-postman`
+
+**Option 2: External Tool Integration**
+
+1. Go to **Settings → Tools → External Tools**
+2. Add new tool:
+   - **Name:** Generate API
+   - **Program:** `/full/path/to/mcp-api-postman/venv/bin/python`
+   - **Arguments:** `-m server`
+   - **Working Directory:** `$ProjectFileDir$`
+
+**Note:** IntelliJ MCP support may vary by version. Check JetBrains documentation for the latest MCP integration options.
+
+#### Other MCP-Compatible IDEs
+
+If your IDE supports MCP servers, use:
+- **Command:** `/full/path/to/venv/bin/python` (or `venv\Scripts\python.exe` on Windows)
+- **Args:** `["-m", "server"]`
+- **CWD:** `/full/path/to/mcp-api-postman`
+
+### 3. Restart Your IDE
+
+Fully quit and restart your IDE for the MCP server to load.
+
+## 💬 Usage with AI Assistants
+
+Works with **any MCP-compatible AI assistant**: GitHub Copilot, Claude (in Cursor/VS Code), or any other MCP-enabled IDE.
 
 ### Detect Framework
 
 ```
 @workspace what framework is this project?
-@workspace detect the framework type
+what framework is this?
+detect the framework type
 ```
 
 ### Generate APIs
@@ -88,15 +162,18 @@ Fully quit and restart VS Code for the MCP server to load.
 ```bash
 # Auto-detect framework and generate
 @workspace create API for "Product" with name:string, price:decimal, stock:int
+create API for "Product" with name:string, price:decimal
 
 # Specify framework explicitly
 @workspace create Django API for "User" with email:email, name:string, is_active:bool
-@workspace create Laravel API for "Order" with order_number:string, total:decimal, status:string
-@workspace create Express API for "Task" with title:string, description:text, completed:boolean
-@workspace create FastAPI for "Article" with title:string, content:text, author:string
-@workspace create Flask API for "Note" with title:string, body:text, author:string
-@workspace create Spring Boot API for "Product" with name:string, price:decimal, quantity:int
+@workspace create Laravel API for "Order" with order_number:string, total:decimal
+@workspace create Express API for "Task" with title:string, completed:boolean
+@workspace create FastAPI for "Article" with title:string, content:text
+@workspace create Flask API for "Note" with title:string, body:text
+@workspace create Spring Boot API for "Product" with name:string, price:decimal
 ```
+
+**Note:** Some IDEs use `@workspace` prefix, others don't. Adjust based on your IDE.
 
 ### Nullable Fields
 
@@ -184,6 +261,9 @@ Add `?` suffix to make fields optional:
 
 **URL Pattern:** `/api/products/{id}` (path param)  
 **Build Tools:** Maven or Gradle (auto-detected)
+
+**💡 Pro Tip for IntelliJ IDEA Users:**  
+This generator is perfect for Spring Boot development in IntelliJ! Generate the boilerplate code via MCP, then use IntelliJ's powerful refactoring tools to customize it. The generated code follows Spring Boot best practices and integrates seamlessly with IntelliJ's auto-completion and navigation features.
 
 ## 🏗️ Architecture
 
